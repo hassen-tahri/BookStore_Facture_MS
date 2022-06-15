@@ -9,12 +9,12 @@ const ipAddr = '127.0.0.1';
 const app = express();
 const mongodbUrl = "mongodb+srv://adminMs:adminMs@clusterbookstore.kbufu.mongodb.net/BookStoreBd?retryWrites=true&w=majority"
 const port_local = 5000
-const port_eureuka = 8888;
+const  port_eureuka = 8081;
 
 //monogDb config
 mongoose.connect(
     mongodbUrl,
-    (err, done) => {
+   (err, done) => {
         if (err) { console.log(err); }
         if (done) { console.log("base connecte") }
     }
@@ -55,30 +55,29 @@ app.listen(port_local, () => { console.log("server starting") })
 
 const client = new Eureka({
     instance: {
-        //zuul.routes.product-service.path = BookStore_Facture_Server
-        app: 'BookStore_Facture_Server',
-        instanceId: 'Facture_Server_adr',
-        hostName: hostName,
-        ipAddr: ipAddr,
-        port: {
-            '$': port_local,
-            '@enabled': 'true',
-        },
-        vipAddress: "Facture_Server",
-        dataCenterInfo: {
-            '@class': 'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
-            name: 'MyOwn',
-        },
+      app: 'Facture_Server',
+      instanceId: 'Facture_Server',
+      hostName: hostName,
+      ipAddr: ipAddr,
+      port: {
+        '$': port_local,
+        '@enabled': 'true',
+      },
+      vipAddress: "Facture_Server",
+      dataCenterInfo: {
+        '@class': 'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
+        name: 'MyOwn',
+      },
     },
     //retry 10 time for 3 minute 20 seconds.
     eureka: {
-        host: eurekaHost,
-        port: port_eureuka,
-        servicePath: '/eureka/apps/',
-        maxRetries: 10,
-        requestRetryDelay: 2000,
+      host: eurekaHost,
+      port: port_eureuka,
+      servicePath: '/eureka/apps/',
+      maxRetries: 10,
+      requestRetryDelay: 2000,
     },
-})
+  })
 
 //start register
 client.logger.level('debug');
